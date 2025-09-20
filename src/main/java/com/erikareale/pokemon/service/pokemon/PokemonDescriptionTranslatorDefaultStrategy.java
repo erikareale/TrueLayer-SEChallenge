@@ -1,13 +1,15 @@
 package com.erikareale.pokemon.service.pokemon;
 
 import com.erikareale.pokemon.service.pokemon.enums.PokemonDescriptionTranslationEnum;
-import skaro.pokeapi.resource.FlavorText;
+import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
 
+@Component
 public class PokemonDescriptionTranslatorDefaultStrategy implements PokemonDescriptionTranslatorStrategy {
 
     @Override
-    public String translate(FlavorText description) {
-        return "";
+    public Mono<String> translate(String description) {
+        return Mono.just(description);
     }
 
     @Override

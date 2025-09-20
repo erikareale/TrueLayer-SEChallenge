@@ -1,32 +1,30 @@
 package com.erikareale.pokemon.service.pokemon.bean;
 
-import reactor.core.publisher.Mono;
-
 public final class PokemonSpeciesBeanBuilder {
 
-    private Mono<String> description;
-    private Mono<String> name;
-    private Mono<Boolean> isLegendary;
-    private Mono<String> habitat;
+    private String description;
+    private String name;
+    private Boolean isLegendary;
+    private String habitat;
 
     public PokemonSpeciesBeanBuilder() {}
 
-    public PokemonSpeciesBeanBuilder withDescription(Mono<String> description) {
+    public PokemonSpeciesBeanBuilder withDescription(String description) {
         this.description = description;
         return this;
     }
 
-    public PokemonSpeciesBeanBuilder withName(Mono<String> name) {
+    public PokemonSpeciesBeanBuilder withName(String name) {
         this.name = name;
         return this;
     }
 
-    public PokemonSpeciesBeanBuilder withIsLegendary(Mono<Boolean> isLegendary) {
+    public PokemonSpeciesBeanBuilder withIsLegendary(Boolean isLegendary) {
         this.isLegendary = isLegendary;
         return this;
     }
 
-    public PokemonSpeciesBeanBuilder withHabitat(Mono<String> habitat) {
+    public PokemonSpeciesBeanBuilder withHabitat(String habitat) {
         this.habitat = habitat;
         return this;
     }

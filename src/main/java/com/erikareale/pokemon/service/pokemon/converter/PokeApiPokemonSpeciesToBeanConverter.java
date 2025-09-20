@@ -4,26 +4,37 @@ import com.erikareale.pokemon.service.pokemon.bean.PokemonSpeciesBean;
 import com.erikareale.pokemon.service.pokemon.bean.PokemonSpeciesBeanBuilder;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 import skaro.pokeapi.resource.FlavorText;
 import skaro.pokeapi.resource.NamedApiResource;
 import skaro.pokeapi.resource.pokemonspecies.PokemonSpecies;
 
+import java.util.Optional;
+
 @Service
-public class PokeApiPokemonSpeciesToBeanConverter implements Converter<Mono<PokemonSpecies>, PokemonSpeciesBean> {
+public class PokeApiPokemonSpeciesToBeanConverter implements Converter<PokemonSpecies, PokemonSpeciesBean> {
 
     @Override
-    public PokemonSpeciesBean convert(Mono<PokemonSpecies> source) {
+    public PokemonSpeciesBean convert(PokemonSpecies source) {
         return new PokemonSpeciesBeanBuilder()
-                .withName(source.map(PokemonSpecies::getName))
-                .withHabitat(source.mapNotNull(PokemonSpecies::getHabitat)
-                                   .map(NamedApiResource::getName))
-                .withIsLegendary(source.map(PokemonSpecies::getIsLegendary))
-                .withDescription(source.mapNotNull(PokemonSpecies::getFlavorTextEntries)
-                                       .flatMapMany(Flux::fromIterable)
-                                       .next()
-                                       .mapNotNull(FlavorText::getFlavorText))
+                .withName(source.getName())
+                .withHabitat(Optional.ofNullable(source.getHabitat())
+                                     .map(NamedApiResource::getName)
+                                     .orElse(null))
+                .withIsLegendary(source.getIsLegendary())
+                .withDescription(source.getFlavorTextEntries().stream().findFirst()
+                                       .map(FlavorText::getFlavorText)
+                                       .orElse(null))
+                .build();
+    }
+
+    public PokemonSpeciesBean convert(PokemonSpecies source, String translation) {
+        return new PokemonSpeciesBeanBuilder()
+                .withName(source.getName())
+                .withHabitat(Optional.ofNullable(source.getHabitat())
+                                     .map(NamedApiResource::getName)
+                                     .orElse(null))
+                .withIsLegendary(source.getIsLegendary())
+                .withDescription(translation)
                 .build();
     }
 
