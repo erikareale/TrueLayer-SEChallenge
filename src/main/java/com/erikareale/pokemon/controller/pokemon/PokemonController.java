@@ -21,4 +21,10 @@ public class PokemonController {
     public Mono<PokemonSpeciesBean> loadPokemonSpecies(@PathVariable String name) {
         return pokemonService.getPokemonSpecies(name);
     }
+
+    @GetMapping("translated/{name}")
+    public Mono<PokemonSpeciesBean> getPokemonWithTranslatedDescription(@PathVariable String name) {
+        return pokemonService.getPokemonWithTranslatedDescription(name);
+
+    }
 }
