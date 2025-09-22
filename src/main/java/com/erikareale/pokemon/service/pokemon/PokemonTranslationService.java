@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
+import skaro.pokeapi.resource.FlavorText;
 import skaro.pokeapi.resource.NamedApiResource;
 import skaro.pokeapi.resource.pokemonspecies.PokemonSpecies;
 
@@ -31,10 +32,10 @@ public class PokemonTranslationService {
                                          Mono<String> translation =
                                                  pokemonDescriptionTranslatorStrategyFactory
                                                          .getPokemonDescriptionTranslatorStrategy(findTranslationStrategy(species))
-                                                         .translate(species.getName())
+                                                         .translate(getDescription(species))
                                                          .onErrorResume(e -> pokemonDescriptionTranslatorStrategyFactory
                                                                  .getPokemonDescriptionTranslatorStrategy(PokemonDescriptionTranslationEnum.DEFAULT)
-                                                                 .translate(species.getName()));
+                                                                 .translate(getDescription(species)));
 
                                          return translation.map(desc ->
                                                                         pokeApiPokemonSpeciesToBeanConverter.convert(species, desc)
@@ -58,6 +59,12 @@ public class PokemonTranslationService {
         boolean isLegendary = Boolean.TRUE.equals(species.getIsLegendary());
 
         return YODA_TRANSLATION_HABITAT.equalsIgnoreCase(habitat) || isLegendary;
+    }
+
+    private String getDescription(PokemonSpecies species){
+        return species.getFlavorTextEntries().stream().findFirst()
+               .map(FlavorText::getFlavorText)
+               .orElse(null);
     }
 
 }
